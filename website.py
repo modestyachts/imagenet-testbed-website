@@ -1,6 +1,7 @@
 import re
 import pandas as pd
 import streamlit as st
+from matplotlib.backends.backend_agg import RendererAgg
 
 import plotter
 from model_types import ModelTypes, model_types_map, NatModelTypes, nat_model_types_map
@@ -141,12 +142,13 @@ if not help:
         st.image('imagenetv2.png', use_column_width=True)
 
     else:
-        fig, df = make_plot(x_axis, y_axis, df, df_metadata)
+        with RendererAgg.lock:
+            fig, df = make_plot(x_axis, y_axis, df, df_metadata)
 
-        if plot_style == 'Pretty':
-            st.pyplot(fig, dpi=200)
-        elif plot_style == 'Interactive':
-            st.plotly_chart(fig)
+            if plot_style == 'Pretty':
+                st.pyplot(fig, dpi=200)
+            elif plot_style == 'Interactive':
+                st.plotly_chart(fig)
 
     st.write("Top-1 accuracies on the selected distributions (click on the headers to sort):")
     st.dataframe(df[df.show_in_plot][[x_axis, y_axis]].sort_index())
