@@ -1,7 +1,7 @@
 import re
 import pandas as pd
 import streamlit as st
-from matplotlib.backends.backend_agg import RendererAgg
+# from matplotlib.backends.backend_agg import RendererAgg
 
 import plotter
 from model_types import ModelTypes, model_types_map, NatModelTypes, nat_model_types_map
@@ -76,7 +76,7 @@ else:
 
 if ('disk' in y_axis or 'memory' in y_axis) and 'avg' not in y_axis:
     severity = st.sidebar.selectbox('Severity:', ['averaged', '1', '2', '3', '4', '5'], 0)
-    if severity is not 'averaged':
+    if severity != 'averaged':
         y_axis = 'imagenet-c.' + re.sub('(_on-disk)|(_in-memory)', '', y_axis) + f'.{severity}' + re.search('(_on-disk)|(_in-memory)', y_axis).group(0)
 
 plot_style = st.sidebar.radio('Plot Style:', ['Pretty', 'Interactive'])
@@ -146,13 +146,13 @@ if not help:
         st.image('imagenetv2.png', use_column_width=True)
 
     else:
-        with RendererAgg.lock:
-            fig, df = make_plot(x_axis, y_axis, df, df_metadata)
+        # with RendererAgg.lock:
+        fig, df = make_plot(x_axis, y_axis, df, df_metadata)
 
-            if plot_style == 'Pretty':
-                st.pyplot(fig, dpi=200)
-            elif plot_style == 'Interactive':
-                st.plotly_chart(fig)
+        if plot_style == 'Pretty':
+            st.pyplot(fig, dpi=200)
+        elif plot_style == 'Interactive':
+            st.plotly_chart(fig)
 
     st.write("Top-1 accuracies on the selected distributions (click on the headers to sort):")
     st.dataframe(df[df.show_in_plot][[x_axis, y_axis]].sort_index())
