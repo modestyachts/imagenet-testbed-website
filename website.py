@@ -58,7 +58,7 @@ def selector(columns, category):
     if category == 'ImageNet Validation Set':
         return [x for x in columns if 'val-on' in x or x == 'val']
     if category == 'Image Corruptions':
-        return [x for x in columns if 'disk' in x or 'memory' in x or x in ['greyscale', 'stylized_imagenet', 'avg_corruptions']]
+        return [x for x in columns if 'imagenet-c' not in x and ('disk' in x or 'memory' in x or x in ['greyscale', 'stylized_imagenet', 'avg_corruptions'])]
     if category == 'Lp Adversarial Attacks':
         return [x for x in columns if 'pgd' in x or x == 'avg_pgd']
     if category == 'Natural Distribution Shifts':
@@ -74,6 +74,10 @@ else:
     y_axis_category = st.sidebar.selectbox('Y-axis test set category:', categories, 1)
     y_axis = st.sidebar.selectbox('Y-axis test set:', sorted(selector(df.columns, y_axis_category)), 5 if y_axis_category == 'Natural Distribution Shifts' else 0, format_func=format_fn)
 
+if ('disk' in y_axis or 'memory' in y_axis) and 'avg' not in y_axis:
+    severity = st.sidebar.selectbox('Severity:', ['averaged', '1', '2', '3', '4', '5'], 0)
+    if severity is not 'averaged':
+        y_axis = 'imagenet-c.' + re.sub('(_on-disk)|(_in-memory)', '', y_axis) + f'.{severity}' + re.search('(_on-disk)|(_in-memory)', y_axis).group(0)
 
 plot_style = st.sidebar.radio('Plot Style:', ['Pretty', 'Interactive'])
 
@@ -90,9 +94,9 @@ def make_plot(x_axis, y_axis, df, df_metadata):
 
     df_visible = df[df.show_in_plot == True]
     xlim = [df_visible[x_axis].min() - 2, df_visible[x_axis].max() + 2]
-    xlim = [max(xlim[0], 0.1), min(xlim[1], 99.9)]
+    xlim = [max(xlim[0], 0.05), min(xlim[1], 99.95)]
     ylim = [df_visible[y_axis].min() - 2, df_visible[y_axis].max() + 2]
-    ylim = [max(ylim[0], 0.1), min(ylim[1], 99.9)]
+    ylim = [max(ylim[0], 0.05), min(ylim[1], 99.95)]
 
     if plot_style == 'Pretty':
         fig, _  = plotter.model_scatter_plot(df, x_axis, y_axis, xlim, ylim, model_types,
