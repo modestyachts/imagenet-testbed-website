@@ -79,7 +79,7 @@ if ('disk' in y_axis or 'memory' in y_axis) and 'avg' not in y_axis:
     if severity != 'averaged':
         y_axis = 'imagenet-c.' + re.sub('(_on-disk)|(_in-memory)', '', y_axis) + f'.{severity}' + re.search('(_on-disk)|(_in-memory)', y_axis).group(0)
 
-plot_style = st.sidebar.radio('Plot Style:', ['Pretty', 'Interactive'])
+plot_style = st.sidebar.radio('Plot Style:', ['Pretty', 'Interactive'], 1)
 
 color_scheme = st.sidebar.radio('Model Color Scheme:', ['Simple', 'Highlight Lp-robust models'])
 if color_scheme == 'Simple':
