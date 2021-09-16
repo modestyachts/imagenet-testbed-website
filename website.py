@@ -20,6 +20,7 @@ Play around with the evaluation data from [our testbed](https://github.com/modes
 """)
     
 df = pd.read_csv('results.csv', index_col='model')
+df = df[df.val > 55] # exclude low accuracy models to make plot easier to read
 df_metadata = pd.read_csv('results_metadata.csv', index_col='model')
 
 df.loc['resnet50', 'imagenet-a'] = float('nan')
@@ -37,6 +38,8 @@ presets = {'ImageNetV2': ['val', 'imagenetv2-matched-frequency-format-val'],
            'YTBB-Robust (Dataset)': ['val-on-ytbb-robust-classes', 'ytbb-robust_pm0'],
            'Vid-Robust (Consistency)': ['imagenet-vid-robust_pm0', 'imagenet-vid-robust_pm10'],
            'YTBB-Robust (Consistency)': ['ytbb-robust_pm0', 'ytbb-robust_pm10'],
+           'ImageNet-R': ['val-on-imagenet-r-classes', 'imagenet-r'],
+           'ImageNet-Sketch': ['val', 'imagenet-sketch'],
            'Image Corruptions': ['val', 'avg_corruptions'],
            'Lp Adversarial Attacks': ['val', 'avg_pgd'],}
 use_preset = st.sidebar.checkbox('Use a Preset Distribution Shift')
