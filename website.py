@@ -102,7 +102,7 @@ def make_plot(x_axis, y_axis, df, df_metadata):
     ylim = [max(ylim[0], 0.05), min(ylim[1], 99.95)]
 
     if plot_style == 'Pretty':
-        fig, a_x, slope, intercept = plotter.model_scatter_plot(df, x_axis, y_axis, xlim, ylim, model_types,
+        fig, _, slope, intercept = plotter.model_scatter_plot(df, x_axis, y_axis, xlim, ylim, model_types,
                                          transform=transform.lower(), tick_multiplier=5, num_bootstrap_samples=100,
                                          title=f'Distribution Shift Plot ({transform} Scaling)', x_label=x_axis, y_label=y_axis, 
                                          figsize=(9, 8), include_legend=True, return_separate_legend=False)
