@@ -258,7 +258,7 @@ def model_scatter_plot(df, x_axis, y_axis, xlim, ylim, model_types, num_bootstra
         return fig, ax, model_names
 
     else:
-        return fig, ax, slope, intercept
+        return fig, ax
 
 
 def model_scatter_plot_hyp(df, x_axis, y_axis, xlim, ylim, model_types,
@@ -1358,4 +1358,4 @@ def model_scatter_plot_interactive(df, x_axis, y_axis, xlim, ylim, model_types, 
                      zeroline=True, zerolinewidth=1, zerolinecolor='LightGrey',
                      showline=True, linewidth=1, linecolor='Black', mirror=True)
 
-    return fig, slope, intercept
+    return fig
