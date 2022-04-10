@@ -102,18 +102,18 @@ def make_plot(x_axis, y_axis, df, df_metadata):
     ylim = [max(ylim[0], 0.05), min(ylim[1], 99.95)]
 
     if plot_style == 'Pretty':
-        fig, _  = plotter.model_scatter_plot(df, x_axis, y_axis, xlim, ylim, model_types,
+        fig, _, slope, intercept = plotter.model_scatter_plot(df, x_axis, y_axis, xlim, ylim, model_types,
                                          transform=transform.lower(), tick_multiplier=5, num_bootstrap_samples=100,
                                          title=f'Distribution Shift Plot ({transform} Scaling)', x_label=x_axis, y_label=y_axis, 
                                          figsize=(9, 8), include_legend=True, return_separate_legend=False)
 
     elif plot_style == 'Interactive':
-        fig  = plotter.model_scatter_plot_interactive(df, x_axis, y_axis, xlim, ylim, model_types,
+        fig, slope, intercept  = plotter.model_scatter_plot_interactive(df, x_axis, y_axis, xlim, ylim, model_types,
                                          transform=transform.lower(), tick_multiplier=5, num_bootstrap_samples=100,
                                          title=f'Distribution Shift Plot ({transform} Scaling)', x_label=x_axis, y_label=y_axis, 
                                          height=650, width=750, include_legend=True, return_separate_legend=False)
     
-    return fig, df
+    return fig, slope, intercept, df
 
 def prepare_df_for_plotting(df, df_metadata, columns):
     df = df[list(set(columns))]
@@ -150,13 +150,16 @@ if not help:
 
     else:
         # with RendererAgg.lock:
-        fig, df = make_plot(x_axis, y_axis, df, df_metadata)
-
+        fig, slope, intercept, df = make_plot(x_axis, y_axis, df, df_metadata)
         if plot_style == 'Pretty':
             st.pyplot(fig, dpi=200)
         elif plot_style == 'Interactive':
             st.plotly_chart(fig)
-
+        st.write(
+            f"The baseline expected accuracy (red line) is with slope: {slope:.3f}, intercept: {intercept:.3f}."
+            " The model data was updated in Sept, 2021."
+            " Details can be found in the Plot Information section below."
+        )
     st.write("Top-1 accuracies on the selected distributions (click on the headers to sort):")
     st.dataframe(df[df.show_in_plot][[x_axis, y_axis]].sort_index())
 
