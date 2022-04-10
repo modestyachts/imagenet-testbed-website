@@ -155,7 +155,11 @@ if not help:
             st.pyplot(fig, dpi=200)
         elif plot_style == 'Interactive':
             st.plotly_chart(fig)
-        st.write(f"The baseline expected accuracy (red line) is with slope: {slope:.3f}, intercept: {intercept:.3f}. Details can be found in the Plot Information section below.")
+        st.write(
+            f"The baseline expected accuracy (red line) is with slope: {slope:.3f}, intercept: {intercept:.3f}."
+            " The model data was updated in Sept, 2021."
+            " Details can be found in the Plot Information section below."
+        )
     st.write("Top-1 accuracies on the selected distributions (click on the headers to sort):")
     st.dataframe(df[df.show_in_plot][[x_axis, y_axis]].sort_index())
 
